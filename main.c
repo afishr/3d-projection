@@ -9,9 +9,17 @@ struct Vec2
   float y;
 };
 
+struct Vec3
+{
+  float x;
+  float y;
+  float z;
+};
+
 void loop(SDL_Renderer *r);
 void drawPoint(SDL_Renderer *r, struct Vec2 point);
 struct Vec2 convertToScreenCoordinates(struct Vec2 point);
+struct Vec2 projectToScreen(struct Vec3 point);
 
 int main()
 {
@@ -69,7 +77,11 @@ void loop(SDL_Renderer *r)
     SDL_SetRenderDrawColor(r, 24, 24, 24, 255);
     SDL_RenderClear(r);
 
-    drawPoint(r, convertToScreenCoordinates((struct Vec2){0, 0.5}));
+    drawPoint(r, convertToScreenCoordinates(
+                     projectToScreen((struct Vec3){0.5, 0, 2})));
+
+    drawPoint(r, convertToScreenCoordinates(
+                     projectToScreen((struct Vec3){0.5, 0, 10})));
 
     SDL_RenderPresent(r);
   }
@@ -91,5 +103,13 @@ struct Vec2 convertToScreenCoordinates(struct Vec2 point)
   return (struct Vec2){
       .x = (point.x + 1) / 2 * WINDOW_WIDTH,
       .y = (1 - (point.y + 1) / 2) * WINDOW_HEIGHT,
+  };
+}
+
+struct Vec2 projectToScreen(struct Vec3 point)
+{
+  return (struct Vec2){
+      .x = point.x / point.z,
+      .y = point.y / point.z,
   };
 }
