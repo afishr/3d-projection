@@ -1,3 +1,5 @@
+#include "SDL3/SDL_oldnames.h"
+#include "SDL3/SDL_render.h"
 #include <SDL3/SDL.h>
 #include <math.h>
 
@@ -21,6 +23,7 @@ typedef struct
 
 void loop(SDL_Renderer *r);
 void drawPoint(SDL_Renderer *r, Vec2 point);
+void drawLine(SDL_Renderer *r, Vec2 a, Vec2 b);
 
 Vec2 convertToScreenCoordinates(Vec2 point);
 Vec2 projectToScreen(Vec3 point);
@@ -73,17 +76,25 @@ void loop(SDL_Renderer *r)
 
   float dt = 1. / FPS;
 
-  float dz = 0;
+  float dz = 1;
   float angle = 0;
 
   Vec3 vs[] = {
-      {0.5, 0.5, 0.5},    {-0.5, 0.5, 0.5},
-      {-0.5, -0.5, 0.5},  {0.5, -0.5, 0.5},
+      {.25, .25, .25},    {-.25, .25, .25},
+      {-.25, -.25, .25},  {.25, -.25, .25},
 
-      {0.5, 0.5, -0.5},   {-0.5, 0.5, -0.5},
-      {-0.5, -0.5, -0.5}, {0.5, -0.5, -0.5},
+      {.25, .25, -.25},   {-.25, .25, -.25},
+      {-.25, -.25, -.25}, {.25, -.25, -.25},
   };
   size_t vs_len = sizeof(vs) / sizeof(*vs);
+
+  int fs[][4] = {
+    {0, 1, 2, 3},
+    {4, 5, 6, 7},
+    {0, 4, 5, 1},
+    {2, 6, 7, 3}
+  };
+  size_t fs_len = sizeof(fs) / sizeof(*fs);
 
   while (!quit)
   {
@@ -97,16 +108,31 @@ void loop(SDL_Renderer *r)
       }
     }
 
-    dz += 1 * dt;
+    // dz += 1 * dt;
     angle += M_PI * dt;
 
     SDL_SetRenderDrawColor(r, 24, 24, 24, 255);
     SDL_RenderClear(r);
 
-    for (int i = 0; i < vs_len; i++)
+    // for (int i = 0; i < vs_len; i++)
+    // {
+    //   drawPoint(r, convertToScreenCoordinates(projectToScreen(
+    //                    translate_z(rotate_y(vs[i], angle), dz))));
+    // }
+
+    for (int j = 0; j < fs_len; j++)
     {
-      drawPoint(r, convertToScreenCoordinates(projectToScreen(
-                       translate_z(rotate_y(vs[i], angle), dz))));
+      for (int k = 0; k < 4; k++)
+      {
+        Vec3 a = vs[fs[j][k]];
+        Vec3 b = vs[fs[j][(k + 1) % 4]];
+
+        drawLine(r,
+                 convertToScreenCoordinates(
+                     projectToScreen(translate_z(rotate_y(a, angle), dz))),
+                 convertToScreenCoordinates(
+                     projectToScreen(translate_z(rotate_y(b, angle), dz))));
+      }
     }
 
     SDL_RenderPresent(r);
@@ -126,6 +152,12 @@ void drawPoint(SDL_Renderer *r, Vec2 point)
   SDL_SetRenderDrawColor(r, 80, 255, 80, 255);
   SDL_RenderFillRect(
       r, &(SDL_FRect){point.x - size / 2, point.y - size / 2, size, size});
+}
+
+void drawLine(SDL_Renderer *r, Vec2 a, Vec2 b)
+{
+  SDL_SetRenderDrawColor(r, 80, 255, 80, 255);
+  SDL_RenderLine(r, a.x, a.y, b.x, b.y);
 }
 
 Vec2 convertToScreenCoordinates(Vec2 point)
