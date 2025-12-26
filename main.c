@@ -6,12 +6,14 @@
 #define WINDOW_HEIGHT 600
 
 void loop(SDL_Renderer *r);
+void drawPoint(SDL_Renderer *r, float x, float y);
 
 int main()
 {
   if (!SDL_Init(0))
   {
     SDL_Log("SDL_Init failed: %s", SDL_GetError());
+
     return 1;
   }
 
@@ -21,6 +23,7 @@ int main()
   {
     SDL_Log("SDL_CreateWindow creation failed %s", SDL_GetError());
     SDL_Quit();
+
     return 1;
   }
 
@@ -30,6 +33,7 @@ int main()
     SDL_Log("SDL_CreateRenderer failed %s", SDL_GetError());
     SDL_DestroyWindow(w);
     SDL_Quit();
+
     return 1;
   }
 
@@ -45,7 +49,6 @@ int main()
 void loop(SDL_Renderer *r)
 {
   bool quit = false;
-
   SDL_Event event;
 
   while (!quit)
@@ -58,12 +61,20 @@ void loop(SDL_Renderer *r)
       }
     }
 
-    SDL_SetRenderDrawColor(r, 100, 0, 100, 255);
+    SDL_SetRenderDrawColor(r, 24, 24, 24, 255);
     SDL_RenderClear(r);
 
-    SDL_SetRenderDrawColor(r, 255, 255, 0, 255);
-    SDL_RenderFillRect(r, &(SDL_FRect){350, 250, 100, 100});
+    drawPoint(r, 100, 100);
 
     SDL_RenderPresent(r);
   }
+}
+
+
+void drawPoint(SDL_Renderer *r, float x, float y)
+{
+  float size = 20;
+
+  SDL_SetRenderDrawColor(r, 80, 255, 80, 255);
+  SDL_RenderFillRect(r, &(SDL_FRect){x, y, size, size});
 }
