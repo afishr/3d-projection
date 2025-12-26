@@ -1,12 +1,17 @@
-#include "SDL3/SDL_rect.h"
-#include "SDL3/SDL_render.h"
 #include <SDL3/SDL.h>
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
+struct Vec2
+{
+  float x;
+  float y;
+};
+
 void loop(SDL_Renderer *r);
-void drawPoint(SDL_Renderer *r, float x, float y);
+void drawPoint(SDL_Renderer *r, struct Vec2 point);
+struct Vec2 convertToScreenCoordinates(struct Vec2 point);
 
 int main()
 {
@@ -64,17 +69,27 @@ void loop(SDL_Renderer *r)
     SDL_SetRenderDrawColor(r, 24, 24, 24, 255);
     SDL_RenderClear(r);
 
-    drawPoint(r, 100, 100);
+    drawPoint(r, convertToScreenCoordinates((struct Vec2){0, 0.5}));
 
     SDL_RenderPresent(r);
   }
 }
 
-
-void drawPoint(SDL_Renderer *r, float x, float y)
+void drawPoint(SDL_Renderer *r, struct Vec2 point)
 {
   float size = 20;
 
   SDL_SetRenderDrawColor(r, 80, 255, 80, 255);
-  SDL_RenderFillRect(r, &(SDL_FRect){x, y, size, size});
+  SDL_RenderFillRect(
+      r, &(SDL_FRect){point.x - size / 2, point.y - size / 2, size, size});
+}
+
+struct Vec2 convertToScreenCoordinates(struct Vec2 point)
+{
+  // -1..1 => 0..2 => 0..1 => 0..w/h
+
+  return (struct Vec2){
+      .x = (point.x + 1) / 2 * WINDOW_WIDTH,
+      .y = (1 - (point.y + 1) / 2) * WINDOW_HEIGHT,
+  };
 }
