@@ -5,25 +5,26 @@
 #define FPS 60
 #define FRAME_TIME 1000 / FPS
 
-struct Vec2
+typedef struct
 {
   float x;
   float y;
-};
+} Vec2;
 
-struct Vec3
+typedef struct
 {
   float x;
   float y;
   float z;
-};
+} Vec3;
 
 void loop(SDL_Renderer *r);
-void drawPoint(SDL_Renderer *r, struct Vec2 point);
+void drawPoint(SDL_Renderer *r, Vec2 point);
 
-struct Vec2 convertToScreenCoordinates(struct Vec2 point);
-struct Vec2 projectToScreen(struct Vec3 point);
-struct Vec3 translate_z(struct Vec3 point, float dz);
+Vec2 convertToScreenCoordinates(Vec2 point);
+Vec2 projectToScreen(Vec3 point);
+
+Vec3 translate_z(Vec3 point, float dz);
 
 int main()
 {
@@ -71,7 +72,7 @@ void loop(SDL_Renderer *r)
   float dt = 1. / FPS;
   float dz = 0;
 
-  struct Vec3 vs[] = {
+  Vec3 vs[] = {
       {0.5, 0.5, 0.5},    {-0.5, 0.5, 0.5},
       {-0.5, -0.5, 0.5},  {0.5, -0.5, 0.5},
 
@@ -100,7 +101,7 @@ void loop(SDL_Renderer *r)
     for (int i = 0; i < vs_len; i++)
     {
       drawPoint(r, convertToScreenCoordinates(
-                       projectToScreen(translate_z(vs[i], 1 + dz))));
+                       projectToScreen(translate_z(vs[i], dz))));
     }
 
     SDL_RenderPresent(r);
@@ -113,7 +114,7 @@ void loop(SDL_Renderer *r)
   }
 }
 
-void drawPoint(SDL_Renderer *r, struct Vec2 point)
+void drawPoint(SDL_Renderer *r, Vec2 point)
 {
   float size = 20;
 
@@ -122,27 +123,27 @@ void drawPoint(SDL_Renderer *r, struct Vec2 point)
       r, &(SDL_FRect){point.x - size / 2, point.y - size / 2, size, size});
 }
 
-struct Vec2 convertToScreenCoordinates(struct Vec2 point)
+Vec2 convertToScreenCoordinates(Vec2 point)
 {
   // -1..1 => 0..2 => 0..1 => 0..w/h
 
-  return (struct Vec2){
+  return (Vec2){
       .x = (point.x + 1) / 2 * WINDOW_WIDTH,
       .y = (1 - (point.y + 1) / 2) * WINDOW_HEIGHT,
   };
 }
 
-struct Vec2 projectToScreen(struct Vec3 point)
+Vec2 projectToScreen(Vec3 point)
 {
-  return (struct Vec2){
+  return (Vec2){
       .x = point.x / point.z,
       .y = point.y / point.z,
   };
 }
 
-struct Vec3 translate_z(struct Vec3 point, float dz)
+Vec3 translate_z(Vec3 point, float dz)
 {
-  return (struct Vec3){
+  return (Vec3){
       .x = point.x,
       .y = point.y,
       .z = point.z + dz,
