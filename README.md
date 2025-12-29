@@ -1,6 +1,6 @@
 # 3D Projection Demo
 
-![cube.png](.github/cube.png)
+![cube.png](.github/demo.gif)
 
 ## References
   * [One Formula That Demystifies 3D Graphics](https://www.youtube.com/watch?v=qjWkNZ0SXfo)
