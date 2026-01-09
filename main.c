@@ -33,7 +33,7 @@ Vec3 rotate_y(Vec3 point, float angle);
 Vec3 rotate_z(Vec3 point, float angle);
 Vec3 rotate_x(Vec3 point, float angle);
 
-int main()
+int main(void)
 {
   if (!SDL_Init(0))
   {
@@ -90,12 +90,14 @@ void loop(SDL_Renderer *r)
   };
   size_t vs_len = sizeof(vs) / sizeof(*vs);
 
-#define fv 4
-  int fs[][fv] = {{0, 1, 3, 2},
-                  {4, 5, 7, 6},
+  #define FV 4
+  int fs[][FV] = {
+      {0, 1, 3, 2},
+      {4, 5, 7, 6},
 
-                  {0, 1, 5, 4},
-                  {2, 3, 7, 6}};
+      {0, 1, 5, 4},
+      {2, 3, 7, 6},
+  };
   size_t fs_len = sizeof(fs) / sizeof(*fs);
 
   while (!quit)
@@ -124,10 +126,10 @@ void loop(SDL_Renderer *r)
 
     for (int j = 0; j < fs_len; j++)
     {
-      for (int k = 0; k < fv; k++)
+      for (int k = 0; k < FV; k++)
       {
         Vec3 a = vs[fs[j][k]];
-        Vec3 b = vs[fs[j][(k + 1) % fv]];
+        Vec3 b = vs[fs[j][(k + 1) % FV]];
 
         drawLine(r,
                  convertToScreenCoordinates(projectToScreen(translate_z(
