@@ -1,11 +1,10 @@
 #include <SDL3/SDL.h>
 #include <math.h>
-#include <stddef.h>
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 #define ASPECT_RATIO WINDOW_WIDTH / WINDOW_HEIGHT
-#define FPS 60
+#define FPS 24
 #define FRAME_TIME 1000 / FPS
 
 typedef struct
@@ -145,6 +144,8 @@ void loop(SDL_Renderer *r)
     if (frame_time < FRAME_TIME)
     {
       SDL_Delay(FRAME_TIME - frame_time);
+    } else {
+      dt = (float)frame_time / 1000;
     }
   }
 }
