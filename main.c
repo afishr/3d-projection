@@ -143,6 +143,7 @@ void loop(SDL_Renderer *r)
     Uint64 frame_time = SDL_GetTicks() - frame_start;
     if (frame_time < FRAME_TIME)
     {
+      dt = 1. / FPS;
       SDL_Delay(FRAME_TIME - frame_time);
     } else {
       dt = (float)frame_time / 1000;
