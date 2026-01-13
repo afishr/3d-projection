@@ -89,7 +89,7 @@ void loop(SDL_Renderer *r)
   };
   size_t vs_len = sizeof(vs) / sizeof(*vs);
 
-  #define FV 4
+#define FV 4
   int fs[][FV] = {
       {0, 1, 3, 2},
       {4, 5, 7, 6},
@@ -145,7 +145,9 @@ void loop(SDL_Renderer *r)
     {
       dt = 1. / FPS;
       SDL_Delay(FRAME_TIME - frame_time);
-    } else {
+    }
+    else
+    {
       dt = (float)frame_time / 1000;
     }
   }
