@@ -7,14 +7,12 @@
 #define FPS 24
 #define FRAME_TIME 1000 / FPS
 
-typedef struct
-{
+typedef struct {
   float x;
   float y;
 } Vec2;
 
-typedef struct
-{
+typedef struct {
   float x;
   float y;
   float z;
@@ -34,8 +32,7 @@ Vec3 rotate_x(Vec3 point, float angle);
 
 int main(void)
 {
-  if (!SDL_Init(0))
-  {
+  if (!SDL_Init(0)) {
     SDL_Log("SDL_Init failed: %s", SDL_GetError());
 
     return 1;
@@ -43,8 +40,7 @@ int main(void)
 
   SDL_Window *w =
       SDL_CreateWindow("Demo x'=x/z", WINDOW_WIDTH, WINDOW_HEIGHT, 0);
-  if (!w)
-  {
+  if (!w) {
     SDL_Log("SDL_CreateWindow creation failed %s", SDL_GetError());
     SDL_Quit();
 
@@ -52,8 +48,7 @@ int main(void)
   }
 
   SDL_Renderer *r = SDL_CreateRenderer(w, NULL);
-  if (!r)
-  {
+  if (!r) {
     SDL_Log("SDL_CreateRenderer failed %s", SDL_GetError());
     SDL_DestroyWindow(w);
     SDL_Quit();
@@ -99,14 +94,11 @@ void loop(SDL_Renderer *r)
   };
   size_t fs_len = sizeof(fs) / sizeof(*fs);
 
-  while (!quit)
-  {
+  while (!quit) {
     Uint64 frame_start = SDL_GetTicks();
 
-    while (SDL_PollEvent(&event))
-    {
-      if (event.type == SDL_EVENT_QUIT)
-      {
+    while (SDL_PollEvent(&event)) {
+      if (event.type == SDL_EVENT_QUIT) {
         quit = true;
       }
     }
@@ -123,10 +115,8 @@ void loop(SDL_Renderer *r)
     //                    translate_z(rotate_y(vs[i], angle), dz))));
     // }
 
-    for (int j = 0; j < fs_len; j++)
-    {
-      for (int k = 0; k < FV; k++)
-      {
+    for (int j = 0; j < fs_len; j++) {
+      for (int k = 0; k < FV; k++) {
         Vec3 a = vs[fs[j][k]];
         Vec3 b = vs[fs[j][(k + 1) % FV]];
 
@@ -141,13 +131,10 @@ void loop(SDL_Renderer *r)
     SDL_RenderPresent(r);
 
     Uint64 frame_time = SDL_GetTicks() - frame_start;
-    if (frame_time < FRAME_TIME)
-    {
+    if (frame_time < FRAME_TIME) {
       dt = 1. / FPS;
       SDL_Delay(FRAME_TIME - frame_time);
-    }
-    else
-    {
+    } else {
       dt = (float)frame_time / 1000;
     }
   }
