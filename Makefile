@@ -1,7 +1,11 @@
 TARGET=demo
 
+PKGS=SDL3
+CFLAGS=-Wall -pedantic $(shell pkg-config -cflags $(PKGS))
+LDFLAGS=$(shell pkg-config -libs $(PKGS))
+
 build: main.c
-	cc main.c -o bin/$(TARGET) -I/usr/local/include/SDL3 -L/usr/local/lib -lSDL3 -Wl,-rpath,/usr/local/lib
+	cc main.c $(CFLAGS) -o bin/$(TARGET) $(LDFLAGS)
 
 clear:
 	rm -r bin/*

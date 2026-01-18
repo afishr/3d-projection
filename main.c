@@ -82,7 +82,7 @@ void loop(SDL_Renderer *r)
         {-.25, .25, -.25},  {.25, .25, -.25},
         {-.25, -.25, -.25}, {.25, -.25, -.25},
     };
-    size_t vs_len = sizeof(vs) / sizeof(*vs);
+    // size_t vs_len = sizeof(vs) / sizeof(*vs);
 
 #define FV 4
     int fs[][FV] = {
